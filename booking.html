@@ -1,335 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Premium Booking</title>
-    <style>
-        :root {
-            --accent: #e9c007;
-            --bg: #0f1724;
-            --card: #0b1220;
-            --muted: rgba(255, 255, 255, 0.8);
-        }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Premium Booking</title>
 
-        html, body {
-            height: 100%;
-            margin: 0;
-            font-family: Inter, system-ui, Segoe UI, Roboto, 'Helvetica Neue', Arial;
-        }
+<style>
+:root {
+    --accent: #e9c007;
+    --bg: #0f1724;
+    --card: #0b1220;
+    --muted: rgba(255,255,255,0.8);
+}
 
-        body {
-            background: linear-gradient(180deg, #051025 0%, #07142a 60%);
-            color: #fff;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            padding: 36px;
-        }
+* { box-sizing: border-box; }
 
-        .page {
-            width: 100%;
-            max-width: 980px;
-        }
+html, body {
+    margin: 0;
+    height: 100%;
+    font-family: Inter, system-ui, Segoe UI, Roboto, Arial;
+}
 
-        h1 {
-            font-size: 28px;
-            margin: 6px 0 20px;
-        }
+body {
+    background: linear-gradient(180deg, #051025 0%, #07142a 60%);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    padding: 36px;
+}
 
-        .choices {
-            display: flex;
-            gap: 18px;
-            align-items: stretch;
-        }
+.page {
+    width: 100%;
+    max-width: 980px;
+}
 
-        .choice {
-            flex: 1;
-            background: var(--card);
-            border-radius: 12px;
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
-            transition: transform 0.18s ease, box-shadow 0.18s ease;
-        }
+h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
 
-        .choice:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 18px 38px rgba(2, 6, 23, 0.72);
-        }
+.choices {
+    display: flex;
+    gap: 18px;
+}
 
-        .choice img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
+.choice {
+    flex: 1;
+    background: var(--card);
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.2s ease;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
 
-        .label {
-            margin-top: 12px;
-            font-weight: 700;
-            color: var(--muted);
-        }
+.choice:hover {
+    transform: translateY(-6px);
+}
 
-        .anim-clone {
-            position: fixed;
-            z-index: 9999;
-            pointer-events: none;
-            transition: transform 0.9s cubic-bezier(0.2, 0.9, 0.2, 1), opacity 0.45s ease;
-        }
+.choice img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 10px;
+}
 
-        .booking-modal {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.75));
-            z-index: 9000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.28s ease, visibility 0.28s ease;
-        }
+.label {
+    margin-top: 12px;
+    font-weight: 700;
+    color: var(--muted);
+}
 
-        .booking-modal.show {
-            opacity: 1;
-            visibility: visible;
-        }
+/* Animation clone */
+.anim-clone {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    transition: transform 0.9s cubic-bezier(.2,.9,.2,1);
+}
 
-        .modal-card {
-            width: 92%;
-            max-width: 760px;
-            background: linear-gradient(180deg, #071428, #071b2a);
-            border-radius: 12px;
-            padding: 22px;
-            border: 1px solid rgba(233, 192, 7, 0.08);
-            box-shadow: 0 20px 50px rgba(2, 6, 23, 0.7);
-        }
+/* Modal */
+.booking-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s ease;
+    z-index: 9000;
+}
 
-        .modal-top {
-            display: flex;
-            gap: 18px;
-            align-items: center;
-        }
+.booking-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
 
-        .selected-preview {
-            width: 180px;
-            height: 110px;
-            border-radius: 8px;
-            object-fit: cover;
-            background: #111;
-        }
+.modal-card {
+    width: 92%;
+    max-width: 760px;
+    background: linear-gradient(180deg,#071428,#071b2a);
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+}
 
-        .modal-info {
-            flex: 1;
-        }
+.modal-top {
+    display: flex;
+    gap: 18px;
+}
 
-        .warning {
-            background: linear-gradient(90deg, #ffdd57, #ff9b57);
-            color: #081018;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-weight: 800;
-            display: inline-block;
-        }
+.selected-preview {
+    width: 180px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 8px;
+}
 
-        .qr-box {
-            display: flex;
-            gap: 18px;
-            align-items: center;
-            margin-top: 14px;
-        }
+.warning {
+    background: linear-gradient(90deg,#ffdd57,#ff9b57);
+    color: #081018;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 800;
+    display: inline-block;
+}
 
-        .qr {
-            width: 150px;
-            height: 150px;
-            background: #fff;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
+.qr-box {
+    display: flex;
+    gap: 18px;
+    margin-top: 18px;
+}
 
-        .qr img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+.qr {
+    width: 150px;
+    height: 150px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
 
-        .cash-note {
-            background: rgba(255, 255, 255, 0.06);
-            padding: 10px;
-            border-radius: 8px;
-        }
+.qr img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-        .actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 18px;
-        }
+.actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+}
 
-        .btn {
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: 0;
-            cursor: pointer;
-            font-weight: 700;
-        }
+.btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 0;
+    cursor: pointer;
+    font-weight: 700;
+}
 
-        .btn-primary {
-            background: var(--accent);
-            color: #0b0b0b;
-        }
+.btn-primary {
+    background: var(--accent);
+    color: #000;
+}
 
-        .btn-ghost {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: var(--muted);
-        }
+.btn-ghost {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--muted);
+}
 
-        .close-x {
-            background: transparent;
-            border: 0;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 700;
-            cursor: pointer;
-            padding: 4px;
-            font-size: 16px;
-        }
+.close-x {
+    background: none;
+    border: 0;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+}
 
-        @media (max-width: 720px) {
-            .choices {
-                flex-direction: column;
-            }
-
-            .choice img {
-                height: 180px;
-            }
-
-            .modal-top {
-                flex-direction: column;
-            }
-
-            .selected-preview {
-                width: 100%;
-            }
-        }
-    </style>
+/* Responsive */
+@media (max-width: 720px) {
+    .choices { flex-direction: column; }
+    .modal-top { flex-direction: column; }
+    .selected-preview { width: 100%; }
+}
+</style>
 </head>
+
 <body>
-    <div class="page">
-        <h1>Booking — Choose Pickup Place</h1>
-        <div class="choices">
-            <div class="choice" data-type="train">
-                <img src="Gd6cj_nWoAAiMqJ.jpg" alt="Train">
-                <div class="label">Railway Station Thrissur</div>
+
+<div class="page">
+    <h1>Booking — Choose Pickup Place</h1>
+
+    <div class="choices">
+        <div class="choice" data-title="Express Train - Premium">
+            <img src="Gd6cj_nWoAAiMqJ.jpg">
+            <div class="label">Railway Station Thrissur</div>
+        </div>
+
+        <div class="choice" data-title="KSRTC Bus - Premium">
+            <img src="Thrissur_Skywalk_at_Sakthan_Nagar.jpg">
+            <div class="label">KSRTC Bus Stand / Sakthan</div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Modal -->
+<div class="booking-modal" id="bookingModal">
+    <div class="modal-card">
+        <div style="display:flex;justify-content:space-between;">
+            <div class="modal-top">
+                <img id="modalPreview" class="selected-preview">
+                <div>
+                    <div id="modalTitle" style="font-size:18px;font-weight:900;"></div>
+                    <div style="opacity:.75;margin-top:6px;">Premium booking. Limited slots.</div>
+                </div>
             </div>
-            <div class="choice" data-type="bus">
-                <img src="Thrissur_Skywalk_at_Sakthan_Nagar.jpg" alt="KSRTC Bus">
-                <div class="label">KSRTC Bus stand/ Sakthan</div>
+            <button class="close-x" onclick="closeModal()">✕</button>
+        </div>
+
+        <div style="margin-top:20px">
+            <div class="warning">⚠ Only 4 slots left</div>
+        </div>
+
+        <div class="qr-box">
+            <div class="qr">
+                <!-- YOUR UPLOADED QR IMAGE -->
+                <img src="my-gpay-qr.jpg">
+            </div>
+
+            <div style="flex:1">
+                <strong>Payment Options</strong>
+                <p style="opacity:.75">Scan QR using GPay / PhonePe</p>
+
+                <div class="actions">
+                    <button class="btn btn-primary" id="payBtn">Pay with QR</button>
+                    <button class="btn btn-ghost" onclick="alert('Cash booking confirmed')">Buy with Cash</button>
+                </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Booking modal -->
-    <div class="booking-modal" id="bookingModal" aria-hidden="true">
-        <div class="modal-card">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                <div class="modal-top">
-                    <img id="modalPreview" class="selected-preview" src="" alt="preview">
-                    <div class="modal-info">
-                        <div style="font-size: 18px; font-weight: 900;" id="modalTitle">Selected</div>
-                        <div style="margin-top: 8px; color: rgba(255, 255, 255, 0.75);">Premium booking experience. Fast checkout — limited slots.</div>
-                    </div>
-                </div>
-                <button class="close-x" onclick="closeModal()" title="Close">✕</button>
-            </div>
+<!-- Success Modal -->
+<div class="booking-modal" id="successModal">
+    <div class="modal-card" style="text-align:center;">
+        <div style="font-size:42px;">✅</div>
+        <h2>Booking Confirmed</h2>
 
-            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.06);">
-                <div class="warning">⚠ Only 4 slots left</div>
-            </div>
+        <p style="font-weight:700">
+            Come and enjoy!<br>
+            Be on time without fail.
+        </p>
 
-            <div class="qr-box">
-                <div class="qr" id="qrWrap">
-                    <img id="qrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://example.com/pay" alt="QR Code">
-                </div>
-                <div style="flex: 1;">
-                    <div style="font-weight: 800; margin-bottom: 8px;">Payment Options</div>
-                    <div class="cash-note">💰 Prefer cash? Select "Buy with cash" and bring the exact amount to the counter.</div>
-                    <div class="actions">
-                        <button class="btn btn-primary" id="payQrBtn">Pay with QR</button>
-                        <button class="btn btn-ghost" id="cashBtn">Buy with cash</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <p>⏰ Payment Time: <span id="payTime"></span></p>
+
+        <p style="color:var(--accent);font-weight:800;">
+            VIPIN is waiting…
+        </p>
+
+        <button class="btn btn-primary" onclick="closeSuccess()">Done</button>
     </div>
+</div>
 
-    <script>
-        (function() {
-            const choices = document.querySelectorAll('.choice');
-            const modal = document.getElementById('bookingModal');
-            const modalPreview = document.getElementById('modalPreview');
-            const modalTitle = document.getElementById('modalTitle');
-            const payQrBtn = document.getElementById('payQrBtn');
-            const cashBtn = document.getElementById('cashBtn');
+<script>
+const choices = document.querySelectorAll('.choice');
+const modal = document.getElementById('bookingModal');
+const preview = document.getElementById('modalPreview');
+const title = document.getElementById('modalTitle');
 
-            function animateToCenter(imgEl, done) {
-                const rect = imgEl.getBoundingClientRect();
-                const clone = imgEl.cloneNode(true);
-                clone.classList.add('anim-clone');
-                clone.style.left = rect.left + 'px';
-                clone.style.top = rect.top + 'px';
-                clone.style.width = rect.width + 'px';
-                clone.style.height = rect.height + 'px';
-                clone.style.borderRadius = getComputedStyle(imgEl).borderRadius || '8px';
-                document.body.appendChild(clone);
+choices.forEach(choice => {
+    choice.onclick = () => {
+        preview.src = choice.querySelector('img').src;
+        title.textContent = choice.dataset.title;
+        modal.classList.add('show');
+    };
+});
 
-                requestAnimationFrame(() => {
-                    const targetX = (window.innerWidth / 2) - (rect.width / 2);
-                    const targetY = (window.innerHeight / 2) - (rect.height / 2) - 20;
-                    const translateX = targetX - rect.left;
-                    const translateY = targetY - rect.top;
-                    clone.style.transform = `translate(${translateX}px, ${translateY}px) scale(1.28)`;
-                    clone.style.opacity = '1';
-                });
+function closeModal() {
+    modal.classList.remove('show');
+}
 
-                clone.addEventListener('transitionend', () => {
-                    clone.remove();
-                    done && done();
-                }, { once: true });
-            }
+document.getElementById('payBtn').onclick = () => {
+    modal.classList.remove('show');
 
-            choices.forEach(choice => {
-                choice.addEventListener('click', (e) => {
-                    const img = choice.querySelector('img');
-                    const type = choice.dataset.type || 'item';
-                    animateToCenter(img, () => {
-                        modalPreview.src = img.src;
-                        modalTitle.textContent = type === 'train' ? 'Express Train - Premium' : 'KSRTC Bus - Premium';
-                        modal.classList.add('show');
-                        modal.setAttribute('aria-hidden', 'false');
-                    });
-                });
-            });
+    const now = new Date();
+    document.getElementById('payTime').textContent =
+        now.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
 
-            window.closeModal = function() {
-                modal.classList.remove('show');
-                modal.setAttribute('aria-hidden', 'true');
-            }
+    document.getElementById('successModal').classList.add('show');
+};
 
-            payQrBtn.addEventListener('click', () => {
-                alert('Redirecting to QR payment gateway...');
-            });
+function closeSuccess() {
+    document.getElementById('successModal').classList.remove('show');
+}
+</script>
 
-            cashBtn.addEventListener('click', () => {
-                alert('✓ Cash reservation confirmed!\n\nPlease bring the exact amount to the counter.\n\nBooking Reference: #VIP' + Math.random().toString(36).substr(2, 9).toUpperCase());
-            });
-        })();
-    </script>
 </body>
 </html>
